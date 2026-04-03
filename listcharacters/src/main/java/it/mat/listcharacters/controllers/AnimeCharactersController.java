@@ -23,8 +23,9 @@ public class AnimeCharactersController {
     private AnimeCharactersService animeCharactersService;
 
     @GetMapping("/")
-    public ModelAndView showAnimeCharactersList() {
-        return new ModelAndView("characters-list");
+public ModelAndView showAnimeCharactersList() {
+    return new ModelAndView("characters-list")
+        .addObject("characters", animeCharactersService.findAll());
     }
 
     @GetMapping("/new")

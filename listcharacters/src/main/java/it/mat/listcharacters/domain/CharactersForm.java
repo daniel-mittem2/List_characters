@@ -1,5 +1,7 @@
 package it.mat.listcharacters.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,6 @@ public class CharactersForm {
     public String opera;
     public String categoria;
     public String compleanno;  
-    public String immagine; 
+    public MultipartFile immagine; 
     
 }

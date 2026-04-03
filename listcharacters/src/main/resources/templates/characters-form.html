@@ -13,7 +13,7 @@
     </div>
 
     <div>
-        <form method="post" th:action="@{/new}" th:object="${characterForm}">
+        <form method="post" th:action="@{/new}" th:object="${characterForm}" enctype="multipart/form-data">
             <div>
                 <label>Nome:</label>
                 <input th:field="*{nome}" type="text">
@@ -40,8 +40,8 @@
             </div>
 
             <div>
-                <input type="submit" value="Aggiungi">
-                <input type="reset" value="Svuota">
+                <input class="btn btn-primary"type="submit" value="Aggiungi">
+                <input class="btn btn-danger" type="reset" value="Svuota">
             </div>
         </form>
     </div>

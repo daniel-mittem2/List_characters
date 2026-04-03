@@ -13,5 +13,10 @@ public class AnimeCharactersController {
     public ModelAndView showAnimeCharactersList() {
         return new ModelAndView("characters-list");
     }
+
+    @GetMapping("/new")
+    public ModelAndView newAnimeCharacters(){
+        return new ModelAndView("characters-form");
+    }
     
 }

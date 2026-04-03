@@ -13,30 +13,30 @@
     </div>
 
     <div>
-        <form>
+        <form method="post" th:action="@{/new}" th:object="${characterForm}">
             <div>
                 <label>Nome:</label>
-                <input type="text">
+                <input th:field="*{nome}" type="text">
             </div>
             <div>
                 <label>Cognome:</label>
-                <input type="text">
+                <input th:field="*{cognome}" type="text">
             </div>
             <div>
                 <label>Opera:</label>
-                <input type="text">
+                <input th:field="*{opera}" type="text">
             </div>
             <div>
                 <label>Categoria:</label>
-                <input type="text">
+                <input th:field="*{categoria}" type="text">
             </div>
             <div>
                 <label>Data di compleanno:</label>
-                <input type="date">
+                <input th:field="*{compleanno}" type="date">
             </div>
             <div>
                 <label>Immagine:</label>
-                <input type="file" accept="image/*">
+                <input th:field="*{immagine}" type="file" accept="image/*">
             </div>
 
             <div>

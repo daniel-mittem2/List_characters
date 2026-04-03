@@ -45,7 +45,7 @@
             <tbody>
                 <tr th:each="c : ${characters}">
                     <td>
-                        <img th:src="${c.immagine}" alt="immagine" style="width: 60px; height: 60px; object-fit: cover;">
+                        <img th:if="${c.immagine}" th:src="@{${c.immagine}}" alt="immagine" style="width: 60px; height: 60px; object-fit: cover;">
                     </td>
                     <td th:text="${c.nome}"></td>
                     <td th:text="${c.cognome}"></td>

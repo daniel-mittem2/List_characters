@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import it.mat.listcharacters.repositories.AnimeCharactersRepository;
 public class AnimeCharactersService {
 
     // Cartella dove vengono salvate le immagini (dentro il progetto)
-    private static final String UPLOAD_DIR = "uploads/";
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
 
     @Autowired
     private AnimeCharactersRepository animeCharactersRepository;
@@ -45,7 +46,7 @@ public class AnimeCharactersService {
             try {
                 Files.createDirectories(percorso.getParent()); // crea la cartella se non esiste
                 Files.write(percorso, file.getBytes());         // scrive il file su disco
-                c.setImmagine("/uploads/" + nomeFile);          // salva il path nel DB
+                c.setImmagine("/uploads/" + nomeFile);         // salva il path nel DB
             } catch (IOException e) {
                 throw new RuntimeException("Errore nel salvataggio dell'immagine", e);
             }
@@ -56,5 +57,9 @@ public class AnimeCharactersService {
 
     public List<Characters> findAll() {
         return animeCharactersRepository.findAll();
+    }
+
+    public Optional<Characters> get(UUID id) {
+        return animeCharactersRepository.findById(id);
     }
 }

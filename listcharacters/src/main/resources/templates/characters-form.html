@@ -17,30 +17,66 @@
             <div>
                 <label>Nome:</label>
                 <input th:field="*{nome}" type="text">
+            
+                <!-- Messaggio d'errore -->
+                <div th:if="${#fields.hasErrors('nome')}">
+                                <span th:errors="*{nome}" class="text-danger"></span>
+                </div>
             </div>
+
+
+
             <div>
                 <label>Cognome:</label>
                 <input th:field="*{cognome}" type="text">
+
+                <div th:if="${#fields.hasErrors('cognome')}">
+                                <span th:errors="*{cognome}" class="text-danger"></span>
+                </div>
             </div>
+
+
             <div>
                 <label>Opera:</label>
                 <input th:field="*{opera}" type="text">
+
+                <div th:if="${#fields.hasErrors('opera')}">
+                                <span th:errors="*{opera}" class="text-danger"></span>
+                </div>
             </div>
+
+
             <div>
                 <label>Categoria:</label>
                 <input th:field="*{categoria}" type="text">
+                
+                <div th:if="${#fields.hasErrors('categoria')}">
+                                <span th:errors="*{categoria}" class="text-danger"></span>
+                </div>
             </div>
+
+
             <div>
                 <label>Data di compleanno:</label>
                 <input th:field="*{compleanno}" type="date">
+
+                <div th:if="${#fields.hasErrors('compleanno')}">
+                                <span th:errors="*{compleanno}" class="text-danger"></span>
+                </div>
             </div>
+
+
+
             <div>
                 <label>Immagine:</label>
                 <input th:field="*{immagine}" type="file" accept="image/*">
+                <div th:if="${#fields.hasErrors('immagine')}">
+                    <span th:errors="*{immagine}" class="text-danger"></span>
+                </div>
             </div>
 
             <div>
-                <input class="btn btn-primary"type="submit" value="Aggiungi">
+                <input class="btn btn-primary" type="submit" value="Aggiungi">
                 <input class="btn btn-danger" type="reset" value="Svuota">
             </div>
         </form>

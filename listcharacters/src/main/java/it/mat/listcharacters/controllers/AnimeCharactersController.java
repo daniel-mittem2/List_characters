@@ -6,11 +6,14 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.mat.listcharacters.domain.Characters;
 import it.mat.listcharacters.domain.CharactersForm;
 import it.mat.listcharacters.services.AnimeCharactersService;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,7 +31,7 @@ public class AnimeCharactersController {
     private AnimeCharactersService animeCharactersService;
 
     @GetMapping("/")
-public ModelAndView showAnimeCharactersList() {
+    public ModelAndView showAnimeCharactersList() {
     return new ModelAndView("characters-list")
         .addObject("characters", animeCharactersService.findAll());
     }
@@ -39,10 +42,16 @@ public ModelAndView showAnimeCharactersList() {
     }
 
     @PostMapping("/new")
-    public ModelAndView handleNewAnimeCharacters(@ModelAttribute CharactersForm charactersForm) {
+    public ModelAndView handleNewAnimeCharacters(@ModelAttribute @Valid CharactersForm charactersForm, BindingResult br, RedirectAttributes attr) {
+
+        if(br.hasErrors()) {
+            return new ModelAndView("characters-form")
+                .addObject("characterForm", charactersForm)
+                .addObject("org.springframework.validation.BindingResult.characterForm", br);
+        }
+        attr.addFlashAttribute("", true);
         
         Characters c = animeCharactersService.save(charactersForm);
-
         // Usa la stessa vista per mostrare il form dopo il salvataggio o rimanda alla lista.
         return new ModelAndView("redirect:/characters?id=" + c.getId());
     }

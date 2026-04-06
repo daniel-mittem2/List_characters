@@ -5,89 +5,382 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
     <title>Characters Form</title>
+    <style>
+        :root {
+            --anime-bg: #0d0d1a;
+            --anime-panel: #13132a;
+            --anime-border: #2a2a5a;
+            --anime-pink: #ff2d78;
+            --anime-cyan: #00e5ff;
+            --anime-gold: #ffd600;
+            --anime-purple: #9b59f5;
+            --anime-text: #e8e8ff;
+            --anime-muted: #8080b0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--anime-bg);
+            color: var(--anime-text);
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                repeating-linear-gradient(-45deg, transparent, transparent 60px, rgba(255,45,120,0.07) 60px, rgba(255,45,120,0.07) 62px),
+                repeating-linear-gradient(45deg, transparent, transparent 80px, rgba(0,229,255,0.03) 80px, rgba(0,229,255,0.03) 81px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            padding: 28px 20px 60px;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* BACK */
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--anime-border);
+            color: var(--anime-muted);
+            font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px;
+            padding: 7px 14px; border-radius: 4px; transition: all 0.2s;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+            margin-bottom: 28px;
+        }
+        .btn-back:hover { border-color: var(--anime-cyan); color: var(--anime-cyan); background: rgba(0,229,255,0.07); }
+
+        /* HEADER */
+        .anime-header { text-align: center; margin-bottom: 32px; }
+        .anime-header::before {
+            content: '★ CHARACTER EDITOR ★';
+            display: block; font-family: 'Bangers', cursive; font-size: 11px;
+            letter-spacing: 6px; color: var(--anime-cyan); margin-bottom: 6px; opacity: 0.7;
+        }
+        .anime-title {
+            font-family: 'Bangers', cursive; font-size: clamp(2rem, 6vw, 3.5rem);
+            letter-spacing: 3px; line-height: 1;
+            background: linear-gradient(135deg, var(--anime-pink) 0%, var(--anime-gold) 50%, var(--anime-cyan) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            display: inline-block; margin: 0;
+        }
+        .subtitle-decoration {
+            display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px;
+        }
+        .subtitle-decoration .line { height: 2px; width: 60px; background: linear-gradient(90deg, transparent, var(--anime-pink)); }
+        .subtitle-decoration .line.right { background: linear-gradient(90deg, var(--anime-pink), transparent); }
+        .subtitle-decoration span { color: var(--anime-pink); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* PANEL */
+        .anime-panel {
+            background: var(--anime-panel); border: 2px solid var(--anime-border);
+            border-radius: 12px; padding: 32px 36px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,45,120,0.1);
+            position: relative; animation: panelIn 0.4s ease both;
+        }
+        .anime-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--anime-pink), var(--anime-purple), var(--anime-cyan));
+            border-radius: 10px 10px 0 0;
+        }
+        .corner { position: absolute; width: 16px; height: 16px; border-color: var(--anime-pink); border-style: solid; opacity: 0.4; }
+        .corner-tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+        .corner-tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+        .corner-bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+        .corner-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+        /* GRID */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 24px; }
+        .form-grid .full { grid-column: 1 / -1; }
+
+        /* FIELDS */
+        .field-group { display: flex; flex-direction: column; gap: 6px; }
+        .field-label {
+            font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
+            text-transform: uppercase; color: var(--anime-gold);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .field-label i { color: var(--anime-pink); font-size: 13px; }
+
+        .field-input {
+            background: rgba(0,0,0,0.35); border: 1.5px solid var(--anime-border);
+            border-radius: 6px; color: var(--anime-text);
+            font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
+            padding: 10px 14px; width: 100%; transition: all 0.2s; outline: none; -webkit-appearance: none;
+        }
+        .field-input::placeholder { color: var(--anime-muted); }
+        .field-input:focus {
+            border-color: var(--anime-pink);
+            background: rgba(255,45,120,0.05);
+            box-shadow: 0 0 0 3px rgba(255,45,120,0.12);
+        }
+        input[type="date"].field-input::-webkit-calendar-picker-indicator {
+            filter: invert(0.5) sepia(1) saturate(5) hue-rotate(290deg); cursor: pointer;
+        }
+
+        /* FILE */
+        .file-input-wrapper { position: relative; }
+        .file-input-wrapper input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; z-index: 2;
+        }
+        .file-drop-area {
+            background: rgba(0,0,0,0.25); border: 2px dashed var(--anime-border);
+            border-radius: 8px; padding: 20px 16px; text-align: center; transition: all 0.2s; cursor: pointer;
+        }
+        .file-drop-area:hover { border-color: var(--anime-pink); background: rgba(255,45,120,0.07); }
+        .file-drop-area i { font-size: 28px; color: var(--anime-purple); display: block; margin-bottom: 6px; }
+        .file-drop-area .drop-label { font-size: 13px; font-weight: 700; color: var(--anime-muted); }
+        .file-drop-area .drop-sub { font-size: 11px; color: var(--anime-border); margin-top: 2px; }
+        #file-name { font-size: 11px; color: var(--anime-cyan); margin-top: 4px; display: block; font-weight: 700; }
+        #img-preview {
+            display: none; width: 70px; height: 70px; object-fit: cover;
+            border-radius: 6px; border: 2px solid var(--anime-purple);
+            box-shadow: 0 0 12px rgba(155,89,245,0.4); margin: 10px auto 0;
+        }
+
+        /* ERRORS */
+        .field-error { font-size: 11px; font-weight: 700; color: #ff6b6b; display: flex; align-items: center; gap: 4px; }
+
+        /* POWER BAR */
+        .power-bar-wrap {
+            margin-top: 24px; padding: 14px 16px;
+            background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--anime-border);
+        }
+        .power-bar-label {
+            font-size: 10px; font-weight: 800; letter-spacing: 2px;
+            color: var(--anime-muted); text-transform: uppercase; margin-bottom: 8px;
+            display: flex; justify-content: space-between;
+        }
+        .power-bar-label span { color: var(--anime-gold); }
+        .power-bar-track { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+        .power-bar-fill {
+            height: 100%; width: 0%; transition: width 0.5s ease;
+            background: linear-gradient(90deg, var(--anime-pink), var(--anime-purple), var(--anime-cyan));
+            border-radius: 3px;
+        }
+
+        /* BUTTONS */
+        .submit-row { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+
+        .btn-anime-primary {
+            background: linear-gradient(135deg, var(--anime-pink), var(--anime-purple));
+            color: white; border: none; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px;
+            padding: 11px 24px; border-radius: 5px; position: relative; overflow: hidden; transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(255,45,120,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; justify-content: center;
+        }
+        .btn-anime-primary::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.4s;
+        }
+        .btn-anime-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,45,120,0.5); color: white; }
+        .btn-anime-primary:hover::before { left: 150%; }
+
+        .btn-anime-reset {
+            background: transparent; border: 1.5px solid var(--anime-border);
+            color: var(--anime-muted); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px;
+            padding: 11px 24px; border-radius: 5px; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+        }
+        .btn-anime-reset:hover { border-color: var(--anime-muted); color: var(--anime-text); background: rgba(255,255,255,0.04); }
+
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 580px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-grid .full { grid-column: 1; }
+            .anime-panel { padding: 24px 18px; }
+            .btn-anime-primary { flex: none; width: 100%; }
+            .btn-anime-reset { width: 100%; justify-content: center; }
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <a th:href="@{/}" class="btn btn-secondary btn-sm">Torna alla lista</a>
+<div class="page-wrapper">
+
+    <!-- BACK -->
+    <a th:href="@{/}" class="btn-back">
+        <i class="bi bi-arrow-left-short" style="font-size:16px;"></i> Torna alla lista
+    </a>
+
+    <!-- HEADER -->
+    <div class="anime-header">
+        <h1 class="anime-title" th:text="${isEdit} ? 'Modifica Personaggio' : 'Nuovo Personaggio'">Nuovo Personaggio</h1>
+        <div class="subtitle-decoration">
+            <div class="line"></div>
+            <span th:text="${isEdit} ? '✦ Aggiorna Eroe ✦' : '✦ Aggiungi Eroe ✦'">✦ Aggiungi Eroe ✦</span>
+            <div class="line right"></div>
+        </div>
     </div>
 
-    <div>
-        <form method="post" 
-              th:action="${isEdit} ? @{/character/edit/{id}(id=${characterForm.id})} : @{/new}" 
-              th:object="${characterForm}" 
+    <!-- FORM PANEL -->
+    <div class="anime-panel">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+
+        <form method="post"
+              th:action="${isEdit} ? @{/character/edit/{id}(id=${characterForm.id})} : @{/new}"
+              th:object="${characterForm}"
               enctype="multipart/form-data">
-            
-            <!-- Campo nascosto per l'ID durante la modifica -->
+
             <input th:if="${isEdit}" th:field="*{id}" type="hidden">
-            
-            <div>
-                <label>Nome:</label>
-                <input th:field="*{nome}" type="text">
-            
-                <!-- Messaggio d'errore -->
-                <div th:if="${#fields.hasErrors('nome')}">
-                                <span th:errors="*{nome}" class="text-danger"></span>
+
+            <div class="form-grid">
+
+                <!-- NOME -->
+                <div class="field-group">
+                    <label class="field-label"><i class="bi bi-person-fill"></i> Nome</label>
+                    <input th:field="*{nome}" type="text" class="field-input" placeholder="es. Naruto">
+                    <div class="field-error" th:if="${#fields.hasErrors('nome')}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span th:errors="*{nome}"></span>
+                    </div>
+                </div>
+
+                <!-- COGNOME -->
+                <div class="field-group">
+                    <label class="field-label"><i class="bi bi-person"></i> Cognome</label>
+                    <input th:field="*{cognome}" type="text" class="field-input" placeholder="es. Uzumaki">
+                    <div class="field-error" th:if="${#fields.hasErrors('cognome')}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span th:errors="*{cognome}"></span>
+                    </div>
+                </div>
+
+                <!-- OPERA -->
+                <div class="field-group">
+                    <label class="field-label"><i class="bi bi-tv-fill"></i> Opera</label>
+                    <input th:field="*{opera}" type="text" class="field-input" placeholder="es. Naruto Shippuden">
+                    <div class="field-error" th:if="${#fields.hasErrors('opera')}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span th:errors="*{opera}"></span>
+                    </div>
+                </div>
+
+                <!-- CATEGORIA -->
+                <div class="field-group">
+                    <label class="field-label"><i class="bi bi-tag-fill"></i> Categoria</label>
+                    <input th:field="*{categoria}" type="text" class="field-input" placeholder="es. Protagonista">
+                    <div class="field-error" th:if="${#fields.hasErrors('categoria')}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span th:errors="*{categoria}"></span>
+                    </div>
+                </div>
+
+                <!-- COMPLEANNO -->
+                <div class="field-group">
+                    <label class="field-label"><i class="bi bi-cake2-fill"></i> Data di compleanno</label>
+                    <input th:field="*{compleanno}" type="date" class="field-input">
+                    <div class="field-error" th:if="${#fields.hasErrors('compleanno')}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span th:errors="*{compleanno}"></span>
+                    </div>
+                </div>
+
+                <!-- spacer -->
+                <div></div>
+
+                <!-- IMMAGINE -->
+                <div class="field-group full">
+                    <label class="field-label"><i class="bi bi-image-fill"></i> Immagine Personaggio</label>
+                    <div class="file-input-wrapper">
+                        <input th:field="*{immagine}" type="file" accept="image/*" id="f-img" onchange="handleFile(this)">
+                        <div class="file-drop-area">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <div class="drop-label">Clicca o trascina un'immagine</div>
+                            <div class="drop-sub">PNG, JPG, WEBP — max 5MB</div>
+                            <img id="img-preview" src="" alt="preview">
+                        </div>
+                    </div>
+                    <span id="file-name"></span>
+                    <div class="field-error" th:if="${#fields.hasErrors('immagine')}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span th:errors="*{immagine}"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- POWER BAR -->
+            <div class="power-bar-wrap">
+                <div class="power-bar-label">
+                    Completamento scheda <span id="power-pct">0%</span>
+                </div>
+                <div class="power-bar-track">
+                    <div class="power-bar-fill" id="power-bar"></div>
                 </div>
             </div>
 
-
-
-            <div>
-                <label>Cognome:</label>
-                <input th:field="*{cognome}" type="text">
-
-                <div th:if="${#fields.hasErrors('cognome')}">
-                                <span th:errors="*{cognome}" class="text-danger"></span>
-                </div>
+            <!-- SUBMIT -->
+            <div class="submit-row">
+                <button type="submit" class="btn-anime-primary">
+                    <i th:class="${isEdit} ? 'bi bi-floppy-fill' : 'bi bi-plus-circle-fill'"></i>
+                    <span th:text="${isEdit} ? 'Salva Modifiche' : 'Aggiungi Personaggio'">Aggiungi Personaggio</span>
+                </button>
+                <button type="reset" class="btn-anime-reset" onclick="resetPreview()">
+                    <i class="bi bi-arrow-counterclockwise"></i> Svuota
+                </button>
             </div>
 
-
-            <div>
-                <label>Opera:</label>
-                <input th:field="*{opera}" type="text">
-
-                <div th:if="${#fields.hasErrors('opera')}">
-                                <span th:errors="*{opera}" class="text-danger"></span>
-                </div>
-            </div>
-
-
-            <div>
-                <label>Categoria:</label>
-                <input th:field="*{categoria}" type="text">
-                
-                <div th:if="${#fields.hasErrors('categoria')}">
-                                <span th:errors="*{categoria}" class="text-danger"></span>
-                </div>
-            </div>
-
-
-            <div>
-                <label>Data di compleanno:</label>
-                <input th:field="*{compleanno}" type="date">
-
-                <div th:if="${#fields.hasErrors('compleanno')}">
-                                <span th:errors="*{compleanno}" class="text-danger"></span>
-                </div>
-            </div>
-
-
-
-            <div>
-                <label>Immagine:</label>
-                <input th:field="*{immagine}" type="file" accept="image/*">
-                <div th:if="${#fields.hasErrors('immagine')}">
-                    <span th:errors="*{immagine}" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div>
-                <input class="btn btn-primary" type="submit" th:value="${isEdit} ? 'Modifica' : 'Aggiungi'">
-                <input class="btn btn-danger" type="reset" value="Svuota">
-            </div>
         </form>
     </div>
-    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+<script>
+    // Power bar: conta i campi testuali compilati
+    document.querySelectorAll('.field-input').forEach(input => {
+        input.addEventListener('input', updatePower);
+    });
+
+    function updatePower() {
+        const fields = document.querySelectorAll('.field-input:not([type="file"])');
+        const filled = [...fields].filter(f => f.value.trim() !== '').length;
+        const pct = Math.round((filled / fields.length) * 100);
+        document.getElementById('power-bar').style.width = pct + '%';
+        document.getElementById('power-pct').textContent = pct + '%';
+    }
+
+    function handleFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        document.getElementById('file-name').textContent = '✦ ' + file.name;
+        const reader = new FileReader();
+        reader.onload = e => {
+            const prev = document.getElementById('img-preview');
+            prev.src = e.target.result;
+            prev.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function resetPreview() {
+        const prev = document.getElementById('img-preview');
+        prev.style.display = 'none';
+        prev.src = '';
+        document.getElementById('file-name').textContent = '';
+        setTimeout(updatePower, 50);
+    }
+
+    // Init power bar (utile in modalità edit con campi precompilati)
+    updatePower();
+</script>
 </body>
 </html>

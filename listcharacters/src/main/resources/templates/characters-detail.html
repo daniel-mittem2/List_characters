@@ -5,30 +5,314 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
     <title>Dettagli personaggio</title>
+    <style>
+        :root {
+            --anime-bg: #0d0d1a;
+            --anime-panel: #13132a;
+            --anime-border: #2a2a5a;
+            --anime-pink: #ff2d78;
+            --anime-cyan: #00e5ff;
+            --anime-gold: #ffd600;
+            --anime-purple: #9b59f5;
+            --anime-text: #e8e8ff;
+            --anime-muted: #8080b0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--anime-bg);
+            color: var(--anime-text);
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                repeating-linear-gradient(-45deg, transparent, transparent 60px, rgba(255,45,120,0.07) 60px, rgba(255,45,120,0.07) 62px),
+                repeating-linear-gradient(45deg, transparent, transparent 80px, rgba(0,229,255,0.03) 80px, rgba(0,229,255,0.03) 81px);
+            pointer-events: none; z-index: 0;
+        }
+
+        .page-wrapper {
+            position: relative; z-index: 1;
+            padding: 28px 20px 60px;
+            max-width: 780px; margin: 0 auto;
+        }
+
+        /* BACK */
+        .btn-back {
+            background: transparent; border: 1px solid var(--anime-border);
+            color: var(--anime-muted); font-family: 'Nunito', sans-serif;
+            font-weight: 700; font-size: 13px; padding: 7px 14px; border-radius: 4px;
+            transition: all 0.2s; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px;
+        }
+        .btn-back:hover { border-color: var(--anime-cyan); color: var(--anime-cyan); background: rgba(0,229,255,0.07); }
+
+        /* ALERT */
+        .anime-alert {
+            background: linear-gradient(135deg, rgba(0,229,255,0.12), rgba(0,229,255,0.05));
+            border: 1px solid var(--anime-cyan); border-left: 4px solid var(--anime-cyan);
+            border-radius: 6px; padding: 10px 16px; color: var(--anime-cyan);
+            font-weight: 700; font-size: 14px; margin-bottom: 24px;
+            display: flex; align-items: center; gap: 8px;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* HEADER */
+        .anime-header { text-align: center; margin-bottom: 32px; }
+        .anime-header::before {
+            content: '★ CHARACTER FILE ★';
+            display: block; font-family: 'Bangers', cursive; font-size: 11px;
+            letter-spacing: 6px; color: var(--anime-cyan); margin-bottom: 6px; opacity: 0.7;
+        }
+        .anime-title {
+            font-family: 'Bangers', cursive; font-size: clamp(2rem, 6vw, 3.5rem);
+            letter-spacing: 3px; line-height: 1;
+            background: linear-gradient(135deg, var(--anime-pink) 0%, var(--anime-gold) 50%, var(--anime-cyan) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            display: inline-block; margin: 0;
+        }
+        .subtitle-decoration { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; }
+        .subtitle-decoration .line { height: 2px; width: 60px; background: linear-gradient(90deg, transparent, var(--anime-pink)); }
+        .subtitle-decoration .line.right { background: linear-gradient(90deg, var(--anime-pink), transparent); }
+        .subtitle-decoration span { color: var(--anime-pink); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* CARD */
+        .char-card {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 0;
+            background: var(--anime-panel);
+            border: 2px solid var(--anime-border);
+            border-radius: 14px; overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,45,120,0.1);
+            position: relative;
+            animation: cardIn 0.4s ease both;
+        }
+        .char-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--anime-pink), var(--anime-purple), var(--anime-cyan));
+            z-index: 2;
+        }
+        @keyframes cardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* IMAGE COL */
+        .char-image-col {
+            position: relative;
+            background: linear-gradient(180deg, #1a0a2e, #0d0820);
+            overflow: hidden; min-height: 360px;
+        }
+        .char-image-col::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+            background: linear-gradient(transparent, var(--anime-panel)); z-index: 1;
+        }
+        .char-image-col::before {
+            content: ''; position: absolute; top: 0; right: 0; width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--anime-pink), var(--anime-purple), transparent); z-index: 2;
+        }
+        .char-img {
+            width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
+            filter: saturate(1.1) contrast(1.05); transition: transform 0.5s ease;
+        }
+        .char-card:hover .char-img { transform: scale(1.04); }
+
+        .img-placeholder {
+            width: 100%; height: 100%; min-height: 360px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: var(--anime-muted); gap: 10px;
+        }
+        .img-placeholder i { font-size: 56px; opacity: 0.3; }
+        .img-placeholder span { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.4; }
+
+        .char-id-badge {
+            position: absolute; top: 14px; left: 14px;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--anime-pink); border-radius: 4px;
+            padding: 3px 8px; font-family: 'Bangers', cursive; font-size: 11px;
+            letter-spacing: 2px; color: var(--anime-pink); z-index: 3;
+        }
+        .char-cat-overlay {
+            position: absolute; bottom: 14px; left: 14px; z-index: 3;
+            background: linear-gradient(135deg, rgba(155,89,245,0.85), rgba(255,45,120,0.85));
+            border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 800;
+            letter-spacing: 0.5px; color: white; backdrop-filter: blur(4px);
+        }
+
+        /* INFO COL */
+        .char-info-col { padding: 28px 30px; display: flex; flex-direction: column; justify-content: space-between; }
+
+        .char-full-name { margin-bottom: 20px; }
+        .char-full-name .surname {
+            font-family: 'Bangers', cursive; font-size: 13px; letter-spacing: 3px;
+            color: var(--anime-muted); text-transform: uppercase; display: block; margin-bottom: 2px;
+        }
+        .char-full-name .name {
+            font-family: 'Bangers', cursive; font-size: clamp(2rem, 4vw, 2.8rem);
+            letter-spacing: 2px; line-height: 1;
+            background: linear-gradient(135deg, #fff, var(--anime-text));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        /* STATS */
+        .stats-grid { display: flex; flex-direction: column; gap: 2px; margin-bottom: 24px; flex: 1; }
+        .stat-row { display: flex; align-items: stretch; border-radius: 6px; overflow: hidden; transition: background 0.15s; }
+        .stat-row:hover { background: rgba(255,255,255,0.02); }
+        .stat-key {
+            width: 130px; flex-shrink: 0; padding: 10px 12px;
+            font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--anime-gold); display: flex; align-items: center; gap: 7px;
+            border-right: 1px solid var(--anime-border);
+        }
+        .stat-key i { color: var(--anime-pink); font-size: 13px; flex-shrink: 0; }
+        .stat-val { padding: 10px 16px; font-size: 14px; font-weight: 700; color: var(--anime-text); display: flex; align-items: center; }
+        .stat-divider { height: 1px; background: var(--anime-border); margin: 2px 0; opacity: 0.5; }
+
+        .badge-opera {
+            background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,229,255,0.05));
+            border: 1px solid rgba(0,229,255,0.35); color: var(--anime-cyan);
+            font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+        }
+
+        /* ACTIONS */
+        .action-row { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--anime-border); }
+
+        .btn-anime-primary {
+            background: linear-gradient(135deg, var(--anime-pink), var(--anime-purple));
+            color: white; border: none; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px;
+            padding: 9px 18px; border-radius: 5px; position: relative; overflow: hidden; transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(255,45,120,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+            display: inline-flex; align-items: center; gap: 7px; cursor: pointer; text-decoration: none;
+        }
+        .btn-anime-primary::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: left 0.4s;
+        }
+        .btn-anime-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,45,120,0.5); color: white; }
+        .btn-anime-primary:hover::before { left: 150%; }
+
+        .btn-anime-danger {
+            background: linear-gradient(135deg, #ff4444, #cc1100);
+            color: white; border: none; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px;
+            padding: 9px 18px; border-radius: 5px; transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(255,50,50,0.25);
+            display: inline-flex; align-items: center; gap: 7px; cursor: pointer; text-decoration: none;
+        }
+        .btn-anime-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,50,50,0.5); color: white; }
+
+        .corner { position: absolute; width: 16px; height: 16px; border-color: var(--anime-pink); border-style: solid; opacity: 0.3; }
+        .corner-bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+        .corner-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+        @media (max-width: 640px) {
+            .char-card { grid-template-columns: 1fr; }
+            .char-image-col { min-height: 260px; }
+            .char-info-col { padding: 20px 18px; }
+            .stat-key { width: 110px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <a th:href="@{/}" class="btn btn-secondary btn-sm mb-3">Torna alla lista</a>
+<div class="page-wrapper">
 
-        <div class="alert alert-success" role="alert" th:if="${newCharacters != null}">
-            Personaggio salvato
-        </div>
+    <!-- BACK -->
+    <a th:href="@{/}" class="btn-back">
+        <i class="bi bi-arrow-left-short" style="font-size:16px;"></i> Torna alla lista
+    </a>
 
-        <h2>Dettagli personaggio</h2>
+    <!-- ALERT -->
+    <div class="anime-alert" th:if="${newCharacters != null}">
+        <i class="bi bi-check-circle-fill"></i>
+        Personaggio salvato con successo!
+    </div>
 
-        <div class="card" style="max-width: 400px;">
-            <img th:if="${characters.immagine}" th:src="@{${characters.immagine}}" class="card-img-top" alt="immagine" style="max-height: 300px; object-fit: cover;">
-            <div class="card-body">
-                <p><strong>Nome:</strong> <span th:text="${characters.nome}"></span></p>
-                <p><strong>Cognome:</strong> <span th:text="${characters.cognome}"></span></p>
-                <p><strong>Opera:</strong> <span th:text="${characters.opera}"></span></p>
-                <p><strong>Categoria:</strong> <span th:text="${characters.categoria}"></span></p>
-                <p><strong>Compleanno:</strong> <span th:text="${characters.compleanno}"></span></p>
-            </div>
+    <!-- HEADER -->
+    <div class="anime-header">
+        <h1 class="anime-title">Dettagli Personaggio</h1>
+        <div class="subtitle-decoration">
+            <div class="line"></div>
+            <span>✦ Character File ✦</span>
+            <div class="line right"></div>
         </div>
     </div>
 
-    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+    <!-- CARD -->
+    <div class="char-card">
+
+        <!-- LEFT: IMAGE -->
+        <div class="char-image-col">
+            <div class="char-id-badge" th:text="'FILE #' + ${characters.id}">FILE #???</div>
+            <div class="char-cat-overlay" th:text="${characters.categoria}">Categoria</div>
+
+            <img th:if="${characters.immagine}"
+                 th:src="@{${characters.immagine}}"
+                 class="char-img"
+                 alt="immagine personaggio">
+
+            <div th:unless="${characters.immagine}" class="img-placeholder">
+                <i class="bi bi-person-bounding-box"></i>
+                <span>Nessuna immagine</span>
+            </div>
+        </div>
+
+        <!-- RIGHT: INFO -->
+        <div class="char-info-col">
+
+            <div class="char-full-name">
+                <span class="surname" th:text="${characters.cognome}">Cognome</span>
+                <div class="name" th:text="${characters.nome}">Nome</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-row">
+                    <div class="stat-key"><i class="bi bi-person-fill"></i> Nome</div>
+                    <div class="stat-val" th:text="${characters.nome}"></div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-row">
+                    <div class="stat-key"><i class="bi bi-person"></i> Cognome</div>
+                    <div class="stat-val" th:text="${characters.cognome}"></div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-row">
+                    <div class="stat-key"><i class="bi bi-tv-fill"></i> Opera</div>
+                    <div class="stat-val"><span class="badge-opera" th:text="${characters.opera}"></span></div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-row">
+                    <div class="stat-key"><i class="bi bi-tag-fill"></i> Categoria</div>
+                    <div class="stat-val" th:text="${characters.categoria}"></div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-row">
+                    <div class="stat-key"><i class="bi bi-cake2-fill"></i> Compleanno</div>
+                    <div class="stat-val" th:text="${characters.compleanno}"></div>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <a th:href="@{'/character/edit/'+${characters.id}}" class="btn-anime-primary">
+                    <i class="bi bi-pencil-fill"></i> Modifica
+                </a>
+                <a th:href="@{'/character/delete/'+${characters.id}}" class="btn-anime-danger">
+                    <i class="bi bi-trash3-fill"></i> Elimina
+                </a>
+            </div>
+
+        </div>
+
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+    </div>
+
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

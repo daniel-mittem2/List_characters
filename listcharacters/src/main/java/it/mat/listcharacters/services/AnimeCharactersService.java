@@ -30,6 +30,37 @@ public class AnimeCharactersService {
         return animeCharactersRepository.save(c);
     }
 
+    public Characters update(CharactersForm charactersForm) {
+        Optional<Characters> opCharacter = animeCharactersRepository.findById(charactersForm.getId());
+        
+        if (!opCharacter.isPresent()) {
+            throw new RuntimeException("Personaggio non trovato");
+        }
+
+        Characters c = opCharacter.get();
+        c.setNome(charactersForm.getNome());
+        c.setCognome(charactersForm.getCognome());
+        c.setOpera(charactersForm.getOpera());
+        c.setCategoria(charactersForm.getCategoria());
+        c.setCompleanno(charactersForm.getCompleanno());
+
+        // Gestione upload immagine - aggiorna solo se una nuova immagine è fornita
+        MultipartFile file = charactersForm.getImmagine();
+        if (file != null && !file.isEmpty()) {
+            String nomeFile = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path percorso = Paths.get(UPLOAD_DIR + nomeFile);
+            try {
+                Files.createDirectories(percorso.getParent());
+                Files.write(percorso, file.getBytes());
+                c.setImmagine("/uploads/" + nomeFile);
+            } catch (IOException e) {
+                throw new RuntimeException("Errore nel salvataggio dell'immagine", e);
+            }
+        }
+
+        return animeCharactersRepository.save(c);
+    }
+
     private Characters mapCharacter(CharactersForm characterForm) {
         Characters c = new Characters();
         c.setNome(characterForm.getNome());
@@ -53,6 +84,17 @@ public class AnimeCharactersService {
         }
 
         return c;
+    }
+
+    public CharactersForm convertToForm(Characters character) {
+        CharactersForm form = new CharactersForm();
+        form.setId(character.getId());
+        form.setNome(character.getNome());
+        form.setCognome(character.getCognome());
+        form.setOpera(character.getOpera());
+        form.setCategoria(character.getCategoria());
+        form.setCompleanno(character.getCompleanno());
+        return form;
     }
 
     public List<Characters> findAll() {

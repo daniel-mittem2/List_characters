@@ -13,7 +13,14 @@
     </div>
 
     <div>
-        <form method="post" th:action="@{/new}" th:object="${characterForm}" enctype="multipart/form-data">
+        <form method="post" 
+              th:action="${isEdit} ? @{/character/edit/{id}(id=${characterForm.id})} : @{/new}" 
+              th:object="${characterForm}" 
+              enctype="multipart/form-data">
+            
+            <!-- Campo nascosto per l'ID durante la modifica -->
+            <input th:if="${isEdit}" th:field="*{id}" type="hidden">
+            
             <div>
                 <label>Nome:</label>
                 <input th:field="*{nome}" type="text">
@@ -76,7 +83,7 @@
             </div>
 
             <div>
-                <input class="btn btn-primary" type="submit" value="Aggiungi">
+                <input class="btn btn-primary" type="submit" th:value="${isEdit} ? 'Modifica' : 'Aggiungi'">
                 <input class="btn btn-danger" type="reset" value="Svuota">
             </div>
         </form>

@@ -64,6 +64,7 @@
                     <!-- Altre opzioni future-->
                     <td onclick="event.stopPropagation();">
                         <a th:href="@{'/character/delete/'+${c.id}}" class="btn btn-danger btn-sm">Elimina</a>
+                        <a th:href="@{'/character/edit/'+${c.id}}" class="btn btn-primary btn-sm">Modifica</a>
                     </td>
                 </tr>
             </tbody>

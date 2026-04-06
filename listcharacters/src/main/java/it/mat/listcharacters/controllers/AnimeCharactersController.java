@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ch.qos.logback.core.model.Model;
 import it.mat.listcharacters.domain.Characters;
 import it.mat.listcharacters.domain.CharactersForm;
 import it.mat.listcharacters.services.AnimeCharactersService;
@@ -69,6 +70,41 @@ public class AnimeCharactersController {
         }
         else 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Personaggio non trovato");
+    }
+
+    @GetMapping("character/edit/{id}")
+    public ModelAndView editCharacter(@PathVariable("id") UUID characterId) {
+        Optional<Characters> opCharacter = animeCharactersService.get(characterId);
+
+        if (opCharacter.isPresent()) {
+            CharactersForm form = animeCharactersService.convertToForm(opCharacter.get());
+            
+            return new ModelAndView("characters-form")
+                .addObject("characterForm", form)
+                .addObject("isEdit", true);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Personaggio non trovato");
+        }
+    }
+
+    @PostMapping("character/edit/{id}")
+    public ModelAndView handleEditAnimeCharacters(@PathVariable("id") UUID characterId,
+                                                   @ModelAttribute @Valid CharactersForm charactersForm,
+                                                   BindingResult br,
+                                                   RedirectAttributes attr) {
+
+        if(br.hasErrors()) {
+            return new ModelAndView("characters-form")
+                .addObject("characterForm", charactersForm)
+                .addObject("isEdit", true)
+                .addObject("org.springframework.validation.BindingResult.characterForm", br);
+        }
+
+        charactersForm.setId(characterId);
+        attr.addFlashAttribute("newCharacters", true);
+        
+        animeCharactersService.update(charactersForm);
+        return new ModelAndView("redirect:/characters?id=" + characterId);
     }
 
     @GetMapping("character/delete/{id}")

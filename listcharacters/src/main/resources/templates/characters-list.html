@@ -14,6 +14,12 @@
         <a th:href="@{/deleteAll}" class="btn btn-danger btn-sm">Elimina tutti i personaggi</a>
     </div>
 
+    <div>
+        <div class="alert alert-success" role="alert" th:if="${deleteCharacter != null}">
+            Personaggio eliminato
+        </div>
+    </div>
+
     <header>
         <h2>Lista personaggi anime</h2>
     </header>
@@ -56,7 +62,9 @@
                     <td th:text="${c.compleanno}"></td>
 
                     <!-- Altre opzioni future-->
-                    <td></td>
+                    <td >
+                        <a th:href="@{'/character/delete/'+${c.id}}" class="btn btn-danger btn-sm">Elimina</a>
+                    </td>
                 </tr>
             </tbody>
         </table>

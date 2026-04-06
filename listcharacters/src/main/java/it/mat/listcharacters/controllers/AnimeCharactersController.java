@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,6 +71,13 @@ public class AnimeCharactersController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Personaggio non trovato");
     }
 
+    @GetMapping("character/delete/{id}")
+    public ModelAndView deleteCharacter(@PathVariable("id") UUID characterId, RedirectAttributes attr) {
+            animeCharactersService.deletebyId(characterId);
+
+            attr.addFlashAttribute("deleteCharacter", true);
+            return new ModelAndView("redirect:/");
+    }
 
     @GetMapping("/deleteAll")
     public ModelAndView deleteAllCharacters() {

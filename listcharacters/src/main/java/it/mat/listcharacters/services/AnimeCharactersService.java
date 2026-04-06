@@ -66,4 +66,8 @@ public class AnimeCharactersService {
     public void deleteAll() {
         animeCharactersRepository.deleteAll();
     }
+
+    public void deletebyId(UUID id) {
+        animeCharactersRepository.deleteById(id);
+    }
 }

@@ -11,6 +11,10 @@
     <div class="container mt-4">
         <a th:href="@{/}" class="btn btn-secondary btn-sm mb-3">Torna alla lista</a>
 
+        <div class="alert alert-success" role="alert" th:if="${newCharacters != null}">
+            Personaggio salvato
+        </div>
+
         <h2>Dettagli personaggio</h2>
 
         <div class="card" style="max-width: 400px;">

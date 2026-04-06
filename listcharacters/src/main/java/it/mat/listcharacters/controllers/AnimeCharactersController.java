@@ -49,7 +49,7 @@ public class AnimeCharactersController {
                 .addObject("characterForm", charactersForm)
                 .addObject("org.springframework.validation.BindingResult.characterForm", br);
         }
-        attr.addFlashAttribute("", true);
+        attr.addFlashAttribute("newCharacters", true);
         
         Characters c = animeCharactersService.save(charactersForm);
         // Usa la stessa vista per mostrare il form dopo il salvataggio o rimanda alla lista.

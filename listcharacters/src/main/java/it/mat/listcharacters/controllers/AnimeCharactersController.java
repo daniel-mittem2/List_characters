@@ -69,4 +69,11 @@ public class AnimeCharactersController {
         else 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Personaggio non trovato");
     }
+
+
+    @GetMapping("/deleteAll")
+    public ModelAndView deleteAllCharacters() {
+        animeCharactersService.deleteAll();
+        return new ModelAndView("redirect:/");
+    }
 }

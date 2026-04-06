@@ -62,4 +62,8 @@ public class AnimeCharactersService {
     public Optional<Characters> get(UUID id) {
         return animeCharactersRepository.findById(id);
     }
+
+    public void deleteAll() {
+        animeCharactersRepository.deleteAll();
+    }
 }

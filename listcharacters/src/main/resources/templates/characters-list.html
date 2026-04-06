@@ -51,7 +51,7 @@
             </thead>
 
             <tbody>
-                <tr th:each="c : ${characters}">
+                <tr th:each="c : ${characters}" style="cursor: pointer;" th:data-href="@{/characters(id=${c.id})}" onclick="window.location.href = this.getAttribute('data-href');">
                     <td>
                         <img th:if="${c.immagine}" th:src="@{${c.immagine}}" alt="immagine" style="width: 60px; height: 60px; object-fit: cover;">
                     </td>
@@ -62,7 +62,7 @@
                     <td th:text="${c.compleanno}"></td>
 
                     <!-- Altre opzioni future-->
-                    <td >
+                    <td onclick="event.stopPropagation();">
                         <a th:href="@{'/character/delete/'+${c.id}}" class="btn btn-danger btn-sm">Elimina</a>
                     </td>
                 </tr>

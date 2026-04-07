@@ -112,4 +112,11 @@ public class AnimeCharactersService {
     public void deletebyId(UUID id) {
         animeCharactersRepository.deleteById(id);
     }
+
+    public List<Characters> searchByNomeOrCognome(String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return animeCharactersRepository.findAll();
+    }
+    return animeCharactersRepository.searchByNomeOrCognome(searchTerm.trim());
+    }
 }

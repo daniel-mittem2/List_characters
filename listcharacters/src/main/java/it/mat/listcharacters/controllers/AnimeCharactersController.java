@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.data.autoconfigure.web.DataWebProperties.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -36,6 +37,12 @@ public class AnimeCharactersController {
     public ModelAndView showAnimeCharactersList() {
     return new ModelAndView("characters-list")
         .addObject("characters", animeCharactersService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ModelAndView searchCharacters(@RequestParam(value = "q", required = false, defaultValue = "") String searchTerm) {
+        return new ModelAndView("characters-list")
+            .addObject("characters", animeCharactersService.searchByNomeOrCognome(searchTerm));
     }
 
     @GetMapping("/new")

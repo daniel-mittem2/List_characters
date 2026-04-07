@@ -6,18 +6,45 @@
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <title>Characters List</title>
+    <style>
+        body { background: #0d0d1a; }
+        .table {
+            --bs-table-striped-bg: #1a1040;
+            --bs-table-hover-bg: #2d1b69;
+            --bs-table-hover-color: #fff;
+            --bs-table-color: #d4ccf5;
+            --bs-table-striped-color: #d4ccf5;
+            --bs-table-border-color: #3b2fa0;
+        }
+        .table tbody tr:nth-child(odd) td {
+            background-color: #1a1040 !important;
+        }
+
+        .table tbody tr:nth-child(even) td {
+            background-color: #120d30 !important;
+        }
+        thead th { background: #120d30 !important; color: #c4b5fd !important; border-color: #3b2fa0 !important; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-control { background: #13132b !important; color: #e8e0ff !important; border-color: #3b2fa0 !important; font-size: 13px; }
+        .form-control::placeholder { color: #7c75b5 !important; }
+        .form-control:focus { box-shadow: 0 0 0 2px #6d5fd4 !important; border-color: #6d5fd4 !important; }
+        .badge-cat { background: #3b1fa0; color: #c4b5fd; font-size: 11px; padding: 3px 10px; border-radius: 99px; }
+    </style>
 </head>
 <body>
-    <div>
-        <a th:href="@{/new}" class="btn btn-primary btn-sm">Nuovo personaggio anime</a>
-    
-        <a th:href="@{/deleteAll}" class="btn btn-danger btn-sm">Elimina tutti i personaggi</a>
+
+<div class="container py-3" style="max-width:860px;">
+
+    <div class="d-flex align-items-center gap-2 p-2 mb-3 rounded-3" style="background:#120d30; border:1px solid #3b2fa0;">
+        <span style="font-size:18px;">⛩</span>
+        <h2 class="mb-0 flex-grow-1 fw-medium" style="color:#c4b5fd; font-size:15px;">Lista personaggi anime</h2>
+        <a th:href="@{/new}" class="btn btn-sm fw-medium" style="background:#6d5fd4; color:#fff; font-size:12px;">+ Nuovo personaggio</a>
+        <a th:href="@{/deleteAll}" class="btn btn-sm btn-danger fw-medium" style="font-size:12px;">Elimina tutti</a>
     </div>
 
-    <div>
-        <div class="alert alert-success" role="alert" th:if="${deleteCharacter != null}">
-            Personaggio eliminato
-        </div>
+    <div class="alert border-0 mb-2 py-2 px-3" role="alert"
+         th:if="${deleteCharacter != null}"
+         style="background:#1c3a2a; color:#7de8b0; font-size:13px;">
+        Personaggio eliminato
     </div>
 
     <header>
@@ -28,58 +55,82 @@
         <input type="text" id="searchInput" class="form-control" placeholder="Ricerca per nome o cognome...">
     </div>
 
-    <div>
-        <table class="table table-striped table-bordered table-hover">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped align-middle mb-0">
             <thead>
-                <th class="table-primary">
-                    <a></a>
-                    Immagine
-                </th>
-                <th>
-                    Nome
-                </th>
-                <th>
-                    Cognome
-                </th>
-                <th>
-                    Opera
-                </th>
-                <th>
-                    Categoria
-                </th>
-                <th>
-                    Data di compleanno
-                </th>
-                <th>
-                    Dettagli
-                </th>
+                <tr>
+                    <th style="width:56px;">Img</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Opera</th>
+                    <th>Categoria</th>
+                    <th>Compleanno</th>
+                    <th>Dettagli</th>
+                </tr>
             </thead>
-
             <tbody>
-                <tr th:each="c : ${characters}" style="cursor: pointer;" th:data-href="@{/characters(id=${c.id})}" onclick="window.location.href = this.getAttribute('data-href');">
+                <tr th:each="c : ${characters}"
+                    style="cursor:pointer;"
+                    th:data-href="@{/characters(id=${c.id})}"
+                    onclick="window.location.href = this.getAttribute('data-href');">
                     <td>
-                        <img th:if="${c.immagine}" th:src="@{${c.immagine}}" alt="immagine" style="width: 60px; height: 60px; object-fit: cover;">
+                        <img th:if="${c.immagine}" th:src="@{${c.immagine}}" alt="immagine"
+                             class="rounded-circle"
+                             style="width:38px; height:38px; object-fit:cover; border:2px solid #7c3aed;">
                     </td>
-                    <td th:text="${c.nome}"></td>
-                    <td th:text="${c.cognome}"></td>
-                    <td th:text="${c.opera}"></td>
-                    <td th:text="${c.categoria}"></td>
-                    <td th:text="${c.compleanno}"></td>
-
-                    <!-- Altre opzioni future-->
+                    <td class="fw-medium" style="color:#e8e0ff;" th:text="${c.nome}"></td>
+                    <td style="color:#b0a8e0;" th:text="${c.cognome}"></td>
+                    <td style="color:#b0a8e0;" th:text="${c.opera}"></td>
+                    <td><span class="badge-cat" th:text="${c.categoria}"></span></td>
+                    <td style="color:#b0a8e0;" th:text="${#temporals.format(c.compleanno, 'dd/MM/yyyy')}"></td>
                     <td onclick="event.stopPropagation();">
-                        <a th:href="@{'/character/delete/'+${c.id}}" class="btn btn-danger btn-sm">Elimina</a>
-                        <a th:href="@{'/character/edit/'+${c.id}}" class="btn btn-primary btn-sm">Modifica</a>
+                        <a th:href="@{'/character/delete/'+${c.id}}" class="btn btn-danger btn-sm py-0" style="font-size:11px;">Elimina</a>
+                        <a th:href="@{'/character/edit/'+${c.id}}" class="btn btn-sm py-0" style="background:#6d5fd4; color:#fff; font-size:11px;">Modifica</a>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <p th:if="${#lists.isEmpty(characters)}">
+    <p th:if="${#lists.isEmpty(characters)}" class="text-center mt-3" style="color:#7c75b5; font-size:13px;">
         Nessun personaggio trovato.
     </p>
 
-    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.querySelector('tbody');
+        
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = tableBody.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const nome = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const cognome = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                
+                if (nome.includes(searchTerm) || cognome.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Controlla se tutti i risultati sono nascosti
+            const visibleRows = tableBody.querySelectorAll('tr:not([style*="display: none"])');
+            const noResultsMsg = document.querySelector('p');
+            if (visibleRows.length === 0) {
+                noResultsMsg.style.display = 'block';
+            } else {
+                noResultsMsg.style.display = 'none';
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

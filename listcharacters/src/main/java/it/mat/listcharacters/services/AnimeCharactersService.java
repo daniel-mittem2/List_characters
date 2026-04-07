@@ -116,7 +116,7 @@ public class AnimeCharactersService {
     public List<Characters> searchByNomeOrCognome(String searchTerm) {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             return animeCharactersRepository.findAll();
-    }
-    return animeCharactersRepository.searchByNomeOrCognome(searchTerm.trim());
+        }
+        return animeCharactersRepository.searchByNomeOrCognome(searchTerm.trim());
     }
 }

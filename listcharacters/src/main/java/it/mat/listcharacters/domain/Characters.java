@@ -1,6 +1,7 @@
 package it.mat.listcharacters.domain;
 
 import java.util.UUID;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,7 +37,7 @@ public class Characters {
     private String Categoria;
 
     @Column(name = "compleanno")
-    private String Compleanno;
+    private LocalDate Compleanno;
 
     @Column(name = "immagine")
     private String immagine;

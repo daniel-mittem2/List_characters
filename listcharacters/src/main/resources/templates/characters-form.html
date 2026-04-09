@@ -75,7 +75,18 @@
 
             <div class="mb-3">
                 <label>Immagine</label>
+
+                <!-- mostra preview immagine attuale solo in edit -->
+                <div th:if="${isEdit != null and isEdit and characterForm.immagineAttuale != null}" class="mb-2">
+                    <img th:src="@{${characterForm.immagineAttuale}}"
+                        style="height:80px; width:80px; object-fit:cover; border-radius:8px; border:2px solid #3b2fa0;">
+                    <p style="color:#7c75b5; font-size:11px; margin-top:4px;">Immagine attuale — lascia vuoto per mantenerla</p>
+                </div>
+
                 <input th:field="*{immagine}" type="file" accept="image/*" class="form-control form-control-sm">
+                <!-- campo hidden per passare il path attuale -->
+                <input type="hidden" th:field="*{immagineAttuale}">
+
                 <span th:if="${#fields.hasErrors('immagine')}" th:errors="*{immagine}" class="text-danger" style="font-size:11px;"></span>
             </div>
 

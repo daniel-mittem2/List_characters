@@ -94,6 +94,7 @@ public class AnimeCharactersService {
         form.setOpera(character.getOpera());
         form.setCategoria(character.getCategoria());
         form.setCompleanno(character.getCompleanno());
+        form.setImmagineAttuale(character.getImmagine());
         return form;
     }
 

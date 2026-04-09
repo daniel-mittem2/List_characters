@@ -1,6 +1,7 @@
 package it.mat.listcharacters.domain;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -35,8 +36,11 @@ public class CharactersForm {
     public String categoria;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public LocalDate compleanno;  
 
     public MultipartFile immagine; 
+
+    private String immagineAttuale;
     
 }

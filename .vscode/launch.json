@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ListcharactersApplication<rubrica>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "it.mat.listcharacters.ListcharactersApplication",
+            "projectName": "rubrica",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -56,6 +56,10 @@
                     <div class="field-label">Compleanno</div>
                     <div class="field-value" th:text="${#temporals.format(characters.compleanno, 'dd/MM/yyyy')}"></div>
                 </div>
+                <div class="col-12">
+                    <div class="field-label">Sesso</div>
+                    <div class="field-value" th:text="${characters.sesso}"></div>
+                </div>
             </div>
         </div>
     </div>

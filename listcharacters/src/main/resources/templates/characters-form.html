@@ -73,6 +73,17 @@
                 <span th:if="${#fields.hasErrors('compleanno')}" th:errors="*{compleanno}" class="text-danger" style="font-size:11px;"></span>
             </div>
 
+            <div class="col-6">
+                <label>Sesso</label>
+                <select th:field="*{sesso}" class="form-control form-control-sm">
+                    <option value="">-- Seleziona --</option>
+                    <option value="M">Maschio</option>
+                    <option value="F">Femmina</option>
+                    <option value="Altro">Altro</option>
+                </select>
+                <span th:if="${#fields.hasErrors('sesso')}" th:errors="*{sesso}" class="text-danger" style="font-size:11px;"></span>
+            </div>
+
             <div class="mb-3">
                 <label>Immagine</label>
 

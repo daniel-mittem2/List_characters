@@ -35,6 +35,10 @@ public class CharactersForm {
     @Size(max = 100)
     public String categoria;
 
+    @NotEmpty
+    @Size(max = 20)
+    public String sesso;
+
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     public LocalDate compleanno;  

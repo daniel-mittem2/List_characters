@@ -39,6 +39,9 @@ public class Characters {
     @Column(name = "compleanno")
     private LocalDate Compleanno;
 
+    @Column(name = "sesso")
+    private String sesso;
+
     @Column(name = "immagine")
     private String immagine;
 

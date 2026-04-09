@@ -43,6 +43,7 @@ public class AnimeCharactersService {
         c.setOpera(charactersForm.getOpera());
         c.setCategoria(charactersForm.getCategoria());
         c.setCompleanno(charactersForm.getCompleanno());
+        c.setSesso(charactersForm.getSesso());
 
         // Gestione upload immagine - aggiorna solo se una nuova immagine è fornita
         MultipartFile file = charactersForm.getImmagine();
@@ -68,6 +69,7 @@ public class AnimeCharactersService {
         c.setOpera(characterForm.getOpera());
         c.setCategoria(characterForm.getCategoria());
         c.setCompleanno(characterForm.getCompleanno());
+        c.setSesso(characterForm.getSesso());
 
         // Gestione upload immagine
         MultipartFile file = characterForm.getImmagine();
@@ -95,6 +97,7 @@ public class AnimeCharactersService {
         form.setCategoria(character.getCategoria());
         form.setCompleanno(character.getCompleanno());
         form.setImmagineAttuale(character.getImmagine());
+        form.setSesso(character.getSesso());
         return form;
     }
 

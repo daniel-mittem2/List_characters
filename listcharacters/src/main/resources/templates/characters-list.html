@@ -55,7 +55,7 @@
         <input type="text" id="searchInput" class="form-control" placeholder="Ricerca per nome o cognome...">
     </div>
 
-    <div class="table-responsive">
+    <div th:unless="${#lists.isEmpty(characters)}" class="table-responsive">
         <table class="table table-bordered table-hover table-striped align-middle mb-0">
             <thead>
                 <tr>

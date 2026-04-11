@@ -36,36 +36,36 @@
 
     <div class="d-flex align-items-center gap-2 p-2 mb-3 rounded-3" style="background:#120d30; border:1px solid #3b2fa0;">
         <span style="font-size:18px;">⛩</span>
-        <h2 class="mb-0 flex-grow-1 fw-medium" style="color:#3e1dc2; font-size:15px;">Lista personaggi anime</h2>
-        <a th:href="@{/new}" class="btn btn-sm fw-medium" style="background:#6d5fd4; color:#fff; font-size:12px;">+ Nuovo personaggio</a>
-        <a th:href="@{/deleteAll}" class="btn btn-sm btn-danger fw-medium" style="font-size:12px;">Elimina tutti</a>
+        <h2 class="mb-0 flex-grow-1 fw-medium" style="color:#3e1dc2; font-size:15px;" th:text="#{character.subtitle}">Lista personaggi anime</h2>
+        <a th:href="@{/new}" class="btn btn-sm fw-medium" style="background:#6d5fd4; color:#fff; font-size:12px;" th:text="#{character.plus}">+ Nuovo personaggio</a>
+        <a th:href="@{/deleteAll}" class="btn btn-sm btn-danger fw-medium" style="font-size:12px;" th:text="#{character.deleteAll}">Elimina tutti</a>
     </div>
 
     <div class="alert border-0 mb-2 py-2 px-3" role="alert"
          th:if="${deleteCharacter != null}"
-         style="background:#1c3a2a; color:#7de8b0; font-size:13px;">
+         style="background:#1c3a2a; color:#7de8b0; font-size:13px;" th:text="#{character.deleted}">
         Personaggio eliminato
     </div>
 
     <header>
-        <h2 class="text-primary">Lista personaggi anime</h2>
+        <h2 class="text-primary" th:text="#{character.title}">Lista personaggi anime</h2>
     </header>
 
     <div class="mb-3">
-        <input type="text" id="searchInput" class="form-control" placeholder="Ricerca per nome o cognome...">
+        <input type="text" id="searchInput" class="form-control" th:placeholder="#{character.search}">
     </div>
 
     <div th:unless="${#lists.isEmpty(characters)}" class="table-responsive">
         <table class="table table-bordered table-hover table-striped align-middle mb-0">
             <thead>
                 <tr>
-                    <th style="width:56px;">Img</th>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Opera</th>
-                    <th>Categoria</th>
-                    <th>Compleanno</th>
-                    <th>Dettagli</th>
+                    <th style="width:56px;" th:text="#{character.img}">Img</th>
+                    <th th:text="#{character.name}">Nome</th>
+                    <th th:text="#{character.surname}">Cognome</th>
+                    <th th:text="#{character.opera}">Opera</th>
+                    <th th:text="#{character.category}">Categoria</th>
+                    <th th:text="#{character.birthday}">Compleanno</th>
+                    <th th:text="#{character.actions}">Azioni</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,18 +84,24 @@
                     <td><span class="badge-cat" th:text="${c.categoria}"></span></td>
                     <td style="color:#b0a8e0;" th:text="${#temporals.format(c.compleanno, 'dd/MM/yyyy')}"></td>
                     <td onclick="event.stopPropagation();">
-                        <a th:href="@{'/character/delete/'+${c.id}}" class="btn btn-danger btn-sm py-0" style="font-size:11px;">Elimina</a>
-                        <a th:href="@{'/character/edit/'+${c.id}}" class="btn btn-sm py-0" style="background:#6d5fd4; color:#fff; font-size:11px;">Modifica</a>
+                        <a th:href="@{'/character/delete/'+${c.id}}" class="btn btn-danger btn-sm py-0" style="font-size:11px;" th:text="#{character.delete}">Elimina</a>
+                        <a th:href="@{'/character/edit/'+${c.id}}" class="btn btn-sm py-0" style="background:#6d5fd4; color:#fff; font-size:11px;" th:text="#{character.edit}">Modifica</a>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <p th:if="${#lists.isEmpty(characters)}" class="text-center mt-3" style="color:#7c75b5; font-size:13px;">
-        Nessun personaggio trovato.
+    <p th:if="${#lists.isEmpty(characters)}" class="text-center mt-3" style="color:#7c75b5; font-size:13px;" th:text="#{character.empty}">
+        Nessun personaggio presente. Aggiungi il tuo primo personaggio anime!
     </p>
 
+</div>
+
+<div class= "container text-center py-3" style="max-width:860px;">
+<a th:href="@{/(lang='en')}">English</a> | 
+<a th:href="@{/(lang='it')}">Italiano</a> | 
+<a th:href="@{/(lang='ja')}">日本語</a>
 </div>
 
 <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>

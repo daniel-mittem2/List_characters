@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org">
+<html xmlns="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,6 +37,10 @@
     <div class="d-flex align-items-center gap-2 p-2 mb-3 rounded-3" style="background:#120d30; border:1px solid #3b2fa0;">
         <span style="font-size:18px;">⛩</span>
         <h2 class="mb-0 flex-grow-1 fw-medium" style="color:#3e1dc2; font-size:15px;" th:text="#{character.subtitle}">Lista personaggi anime</h2>
+
+        <!-- selettore lingua -->
+        <div th:replace="~{fragments :: langSelector}"></div>
+
         <a th:href="@{/new}" class="btn btn-sm fw-medium" style="background:#6d5fd4; color:#fff; font-size:12px;" th:text="#{character.plus}">+ Nuovo personaggio</a>
         <a th:href="@{/deleteAll}" class="btn btn-sm btn-danger fw-medium" style="font-size:12px;" th:text="#{character.deleteAll}">Elimina tutti</a>
     </div>
@@ -98,11 +102,7 @@
 
 </div>
 
-<div class= "container text-center py-3" style="max-width:860px;">
-<a th:href="@{/(lang='en')}">English</a> | 
-<a th:href="@{/(lang='it')}">Italiano</a> | 
-<a th:href="@{/(lang='ja')}">日本語</a>
-</div>
+
 
 <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
 

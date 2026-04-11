@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="langSelector">
+    <div class="d-flex gap-1">
+        <a th:href="@{''(lang=it)}" class="btn btn-sm py-0 fw-medium"
+           style="background:#2e2860; color:#a89fe8; font-size:11px; border:1px solid #3b2fa0;">🇮🇹</a>
+        <a th:href="@{''(lang=en)}" class="btn btn-sm py-0 fw-medium"
+           style="background:#2e2860; color:#a89fe8; font-size:11px; border:1px solid #3b2fa0;">🇬🇧</a>
+        <a th:href="@{''(lang=ja)}" class="btn btn-sm py-0 fw-medium"
+           style="background:#2e2860; color:#a89fe8; font-size:11px; border:1px solid #3b2fa0;">🇯🇵</a>
+    </div>
+</div>
+
+</body>
+</html>

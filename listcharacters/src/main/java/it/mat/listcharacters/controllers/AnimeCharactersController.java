@@ -30,23 +30,27 @@ public class AnimeCharactersController {
     @Autowired
     private AnimeCharactersService animeCharactersService;
 
+    // Endpoint per mostrare la lista di tutti i personaggi
     @GetMapping("/")
     public ModelAndView showAnimeCharactersList() {
     return new ModelAndView("characters-list")
         .addObject("characters", animeCharactersService.findAll());
     }
 
+    // Endpoint per la ricerca dei personaggi in base al nome o cognome
     @GetMapping("/search")
     public ModelAndView searchCharacters(@RequestParam(value = "q", required = false, defaultValue = "") String searchTerm) {
         return new ModelAndView("characters-list")
             .addObject("characters", animeCharactersService.searchByNomeOrCognome(searchTerm));
     }
 
+    // Endpoint per mostrare il form di creazione di un nuovo personaggio
     @GetMapping("/new")
     public ModelAndView newAnimeCharacters(){
         return new ModelAndView("characters-form").addObject("characterForm", new CharactersForm());
     }
 
+    // Endpoint per gestire la richiesta di creazione di un nuovo personaggio
     @PostMapping("/new")
     public ModelAndView handleNewAnimeCharacters(@ModelAttribute @Valid CharactersForm charactersForm, BindingResult br, RedirectAttributes attr) {
 
@@ -62,6 +66,7 @@ public class AnimeCharactersController {
         return new ModelAndView("redirect:/characters?id=" + c.getId());
     }
 
+    // Endpoint per mostrare i dettagli di un personaggio specifico in base al suo ID
     @GetMapping(path = "characters", params = "id")
     public ModelAndView showContact(@RequestParam("id") UUID characterId) {
 
@@ -76,6 +81,7 @@ public class AnimeCharactersController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Personaggio non trovato");
     }
 
+    // Endpoint per mostrare il form di modifica di un personaggio specifico in base al suo ID
     @GetMapping("character/edit/{id}")
     public ModelAndView editCharacter(@PathVariable("id") UUID characterId) {
         Optional<Characters> opCharacter = animeCharactersService.get(characterId);
@@ -91,6 +97,7 @@ public class AnimeCharactersController {
         }
     }
 
+    // Endpoint per gestire la richiesta di aggiornamento di un personaggio specifico
     @PostMapping("character/edit/{id}")
     public ModelAndView handleEditAnimeCharacters(@PathVariable("id") UUID characterId,
                                                    @ModelAttribute @Valid CharactersForm charactersForm,
@@ -111,6 +118,7 @@ public class AnimeCharactersController {
         return new ModelAndView("redirect:/characters?id=" + characterId);
     }
 
+    // Endpoint per eliminare un personaggio specifico in base al suo ID
     @GetMapping("character/delete/{id}")
     public ModelAndView deleteCharacter(@PathVariable("id") UUID characterId, RedirectAttributes attr) {
             animeCharactersService.deletebyId(characterId);
@@ -119,6 +127,7 @@ public class AnimeCharactersController {
             return new ModelAndView("redirect:/");
     }
 
+    // Endpoint per eliminare tutti i personaggi presenti nella lista
     @GetMapping("/deleteAll")
     public ModelAndView deleteAllCharacters() {
         animeCharactersService.deleteAll();

@@ -22,12 +22,11 @@
         <h2 class="mb-0 flex-grow-1 fw-medium" style="color:#c4b5fd; font-size:15px;"
             th:text="#{detail.title}">Scheda ninja</h2>
 
-        <!-- invece di th:replace del fragment, metti direttamente -->
         <div class="d-flex gap-1">
             <a th:href="@{/characters(id=${characters.id}, lang=it)}" class="btn btn-sm py-0 fw-medium"
             style="background:#2e2860; color:#a89fe8; font-size:11px; border:1px solid #3b2fa0;">🇮🇹</a>
             <a th:href="@{/characters(id=${characters.id}, lang=en)}" class="btn btn-sm py-0 fw-medium"
-            style="background:#2e2860; color:#a89fe8; font-size:11px; border:1px solid #3b2fa0;">🇬🇧</a>
+            style="background:#2e2860; color:#a89fe8; font-size:11px; border:1px solid #3b2fa0;">EN</a>
             <a th:href="@{/characters(id=${characters.id}, lang=ja)}" class="btn btn-sm py-0 fw-medium"
             style="background:#2e2860; color:#a89fe8; font-size:11px; border:1px solid #3b2fa0;">🇯🇵</a>
         </div>

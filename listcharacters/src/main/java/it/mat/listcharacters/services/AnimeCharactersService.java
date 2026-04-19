@@ -19,34 +19,35 @@ import it.mat.listcharacters.repositories.AnimeCharactersRepository;
 @Service
 public class AnimeCharactersService {
 
-    // Cartella dove vengono salvate le immagini (dentro il progetto)
     private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
 
     @Autowired
     private AnimeCharactersRepository animeCharactersRepository;
 
-    public Characters save(CharactersForm charactersForm) {
-        Characters c = mapCharacter(charactersForm);
+    public Characters save(CharactersForm form) {
+        Characters c = new Characters();
+        mapFields(form, c);
         return animeCharactersRepository.save(c);
     }
 
-    public Characters update(CharactersForm charactersForm) {
-        Optional<Characters> opCharacter = animeCharactersRepository.findById(charactersForm.getId());
-        
-        if (!opCharacter.isPresent()) {
-            throw new RuntimeException("Personaggio non trovato");
-        }
+    public Characters update(CharactersForm form) {
+        Characters c = animeCharactersRepository.findById(form.getId())
+            .orElseThrow(() -> new RuntimeException("Personaggio non trovato"));
+        mapFields(form, c);
+        return animeCharactersRepository.save(c);
+    }
 
-        Characters c = opCharacter.get();
-        c.setNome(charactersForm.getNome());
-        c.setCognome(charactersForm.getCognome());
-        c.setOpera(charactersForm.getOpera());
-        c.setCategoria(charactersForm.getCategoria());
-        c.setCompleanno(charactersForm.getCompleanno());
-        c.setSesso(charactersForm.getSesso());
+    private void mapFields(CharactersForm form, Characters c) {
+        c.setNome(form.getNome());
+        c.setCognome(form.getCognome());
+        c.setOpera(form.getOpera());
+        c.setCategoria(form.getCategoria());
+        c.setCompleanno(form.getCompleanno());
+        c.setSesso(form.getSesso());
+        handleImageUpload(form.getImmagine(), c);
+    }
 
-        // Gestione upload immagine - aggiorna solo se una nuova immagine è fornita
-        MultipartFile file = charactersForm.getImmagine();
+    private void handleImageUpload(MultipartFile file, Characters c) {
         if (file != null && !file.isEmpty()) {
             String nomeFile = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path percorso = Paths.get(UPLOAD_DIR + nomeFile);
@@ -58,34 +59,6 @@ public class AnimeCharactersService {
                 throw new RuntimeException("Errore nel salvataggio dell'immagine", e);
             }
         }
-
-        return animeCharactersRepository.save(c);
-    }
-
-    private Characters mapCharacter(CharactersForm characterForm) {
-        Characters c = new Characters();
-        c.setNome(characterForm.getNome());
-        c.setCognome(characterForm.getCognome());
-        c.setOpera(characterForm.getOpera());
-        c.setCategoria(characterForm.getCategoria());
-        c.setCompleanno(characterForm.getCompleanno());
-        c.setSesso(characterForm.getSesso());
-
-        // Gestione upload immagine
-        MultipartFile file = characterForm.getImmagine();
-        if (file != null && !file.isEmpty()) {
-            String nomeFile = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path percorso = Paths.get(UPLOAD_DIR + nomeFile);
-            try {
-                Files.createDirectories(percorso.getParent()); // crea la cartella se non esiste
-                Files.write(percorso, file.getBytes());         // scrive il file su disco
-                c.setImmagine("/uploads/" + nomeFile);         // salva il path nel DB
-            } catch (IOException e) {
-                throw new RuntimeException("Errore nel salvataggio dell'immagine", e);
-            }
-        }
-
-        return c;
     }
 
     public CharactersForm convertToForm(Characters character) {

@@ -79,13 +79,13 @@ show tables;
 4. Mostrare gli attributi di una tabella:
 
 ```sql
-describe contacts;
+describe characters;
 ```
 
 5. Interrogare il database via query:
 
 ```sql
-SELECT * FROM contacts;
+SELECT * FROM characters;
 ```
 ```sql
 INSERT INTO tabella (...) VALUES (...);
